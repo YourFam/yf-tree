@@ -1,0 +1,46 @@
+{
+  "name": "@yourfam/yf-tree",
+  "version": "0.1.0",
+  "description": "Write a directory tree as Markdown or one self-contained HTML page",
+  "type": "module",
+  "bin": {
+    "yf-tree": "bin/yf-tree.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "yf-tree": "node ./bin/yf-tree.js"
+  },
+  "keywords": [
+    "tree",
+    "directory",
+    "cli",
+    "markdown",
+    "html"
+  ],
+  "author": {
+    "name": "YourFam",
+    "email": "kamal@yourfam.co",
+    "url": "https://github.com/YourFam"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YourFam/yf-tree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YourFam/yf-tree/issues"
+  },
+  "homepage": "https://github.com/YourFam/yf-tree#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}

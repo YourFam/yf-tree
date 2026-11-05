@@ -147,3 +147,9 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Local notes, not part of the package
+/temp/
+
+# Default yf-tree output
+/yf-tree-out/
