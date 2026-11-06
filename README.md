@@ -6,7 +6,7 @@ This does not write file contents. That is `yf-dump`. Node 20+.
 
 - **Source / README:** https://github.com/YourFam/yf-tree
 - **npm:** https://www.npmjs.com/package/@yourfam/yf-tree
-- **Unscoped alias:** https://www.npmjs.com/package/yf-tree
+- **Unscoped alias:** https://www.npmjs.com/package/yf-git-tree
 - **Issues:** https://github.com/YourFam/yf-tree/issues
 
 ## Install
@@ -25,10 +25,10 @@ The command is `yf-tree`. No install:
 
 ```bash
 npx @yourfam/yf-tree
-npx yf-tree
+npx yf-git-tree
 ```
 
-`npx yf-tree` is the unscoped alias of `@yourfam/yf-tree` (same CLI, same version).
+`npx yf-git-tree` is the unscoped alias of `@yourfam/yf-tree` (same CLI, same version). npm rejects unscoped `yf-tree` as too similar to existing `rc-tree`. After `-g`, the command is `yf-tree`.
 
 | | `npm install -g @yourfam/yf-tree` | `npm install -D @yourfam/yf-tree` |
 |---|---|---|
@@ -133,7 +133,7 @@ cd alias
 npm publish --access public
 ```
 
-That second package is named `yf-tree` and only shims the scoped CLI.
+That second package is named `yf-git-tree` and only shims the scoped CLI so `npx yf-git-tree` cannot be squatted. npm will not accept unscoped `yf-tree` (too similar to `rc-tree`).
 
 ## License
 

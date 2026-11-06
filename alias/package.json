@@ -1,5 +1,5 @@
 {
-  "name": "yf-tree",
+  "name": "yf-git-tree",
   "version": "0.1.0",
   "description": "Unscoped alias of @yourfam/yf-tree — write a directory tree",
   "type": "module",
