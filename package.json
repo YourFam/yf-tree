@@ -1,6 +1,6 @@
 {
   "name": "@yourfam/yf-tree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Write a directory tree as Markdown or one self-contained HTML page",
   "type": "module",
   "bin": {

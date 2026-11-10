@@ -11,7 +11,8 @@ test("bin --version prints the package version", () => {
   const bin = fileURLToPath(new URL("../bin/yf-tree.js", import.meta.url));
   const result = spawnSync(process.execPath, [bin, "--version"], { encoding: "utf8", windowsHide: true });
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /^0\.1\.0\b/);
+  const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  assert.equal(result.stdout.trim(), pkg.version);
 });
 
 test("help does not need a directory", () => {

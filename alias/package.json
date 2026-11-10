@@ -1,6 +1,6 @@
 {
   "name": "yf-git-tree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Unscoped alias of @yourfam/yf-tree — write a directory tree",
   "type": "module",
   "bin": {
@@ -39,6 +39,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@yourfam/yf-tree": "0.1.0"
+    "@yourfam/yf-tree": "0.1.1"
   }
 }
