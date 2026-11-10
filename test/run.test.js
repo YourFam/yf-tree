@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFileSync, symlinkSync } from "node:fs";
+import { existsSync, readFileSync, symlinkSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -297,6 +297,64 @@ test("second run replaces the same file", () => {
     const body = readFileSync(path.join(dir, "yf-tree-out", "tree.md"), "utf8");
     assert.match(body, /a\.txt/);
     assert.match(body, /b\.txt/);
+  } finally {
+    remove(dir);
+  }
+});
+
+test("--gitignore writes the root .gitignore and does not duplicate", () => {
+  const root = tempDir();
+  try {
+    writeRel(root, ".git/HEAD", "ref: refs/heads/main\n");
+    writeRel(root, "sub/a.txt", "");
+    writeRel(root, ".gitignore", "node_modules/\n");
+
+    const first = run(["--gitignore", "--out", "-"], path.join(root, "sub"));
+    assert.equal(first.code, 0);
+    assert.match(first.err, /added yf-tree-out\/ to .*\/\.gitignore/);
+    assert.equal(existsSync(path.join(root, "sub", ".gitignore")), false);
+    assert.equal(readFileSync(path.join(root, ".gitignore"), "utf8"), "node_modules/\nyf-tree-out/\n");
+
+    const second = run(["--gitignore", "--out", "-"], root);
+    assert.equal(second.code, 0);
+    assert.match(second.err, /yf-tree-out\/ already in \.gitignore/);
+    assert.equal(readFileSync(path.join(root, ".gitignore"), "utf8"), "node_modules/\nyf-tree-out/\n");
+  } finally {
+    remove(root);
+  }
+});
+
+test("--gitignore creates a missing root .gitignore and accepts an anchored line", () => {
+  const root = tempDir();
+  try {
+    writeRel(root, ".git/HEAD", "ref: refs/heads/main\n");
+    writeRel(root, "a.txt", "");
+    const created = run(["--gitignore", "--out", "-"], root);
+    assert.equal(created.code, 0);
+    assert.equal(readFileSync(path.join(root, ".gitignore"), "utf8"), "yf-tree-out/\n");
+
+    writeRel(root, ".gitignore", "/yf-tree-out/\n");
+    const present = run(["--gitignore", "--out", "-"], root);
+    assert.match(present.err, /already in/);
+    assert.equal(readFileSync(path.join(root, ".gitignore"), "utf8"), "/yf-tree-out/\n");
+  } finally {
+    remove(root);
+  }
+});
+
+test("--gitignore fails outside a repository and a normal run does not touch .gitignore", () => {
+  const dir = tempDir();
+  try {
+    writeRel(dir, "a.txt", "");
+    const missing = run(["--gitignore", "--out", "-"], dir);
+    assert.equal(missing.code, 1);
+    assert.match(missing.err, /No git repository found/);
+    assert.equal(existsSync(path.join(dir, ".gitignore")), false);
+
+    writeRel(dir, ".git/HEAD", "ref: refs/heads/main\n");
+    const plain = run(["--out", "-"], dir);
+    assert.equal(plain.code, 0);
+    assert.equal(existsSync(path.join(dir, ".gitignore")), false);
   } finally {
     remove(dir);
   }

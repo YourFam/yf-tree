@@ -26,6 +26,7 @@ test("defaults", () => {
   assert.deepEqual(args.ignore, []);
   assert.equal(args.noDefaultIgnore, false);
   assert.equal(args.noGitignore, false);
+  assert.equal(args.gitignore, false);
   assert.equal(args.dirsOnly, false);
   assert.equal(args.maxChildren, null);
 });
@@ -53,6 +54,10 @@ test("boolean flags and repeatable ignore", () => {
   assert.equal(decideIgnore("dist", true, args.ignore).ignored, true);
   assert.equal(decideIgnore("dir/a.log", false, args.ignore).ignored, true);
   assert.equal(decideIgnore("dir/a.txt", false, args.ignore).ignored, false);
+});
+
+test("--gitignore is opt-in", () => {
+  assert.equal(parseArgs(sh("--gitignore")).gitignore, true);
 });
 
 test("-- separates a path that looks like a flag", () => {
@@ -98,6 +103,7 @@ test("help text names the command and the output rules", () => {
     "--ignore",
     "--no-default-ignore",
     "--no-gitignore",
+    "--gitignore",
     "--dirs-only",
     "--max-children",
   ]) {

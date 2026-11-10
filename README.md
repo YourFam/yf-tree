@@ -64,6 +64,7 @@ yf-tree --stamp --ignore dist --ignore "*.log"
 | `--ignore` | Nothing extra | Repeatable name or glob, on top of the built-in skips |
 | `--no-default-ignore` | Built-in skips are on | Turn those skips off |
 | `--no-gitignore` | `.gitignore` in the scanned tree is honored | Also list paths that Git ignores |
+| `--gitignore` | Off. The repository is not changed | Add `yf-tree-out/` to the repository root `.gitignore`. Creates that file when it is missing |
 | `--dirs-only` | Files and directories | Directories only |
 | `--max-children` | No cap | Max entries kept per folder. The rest become one line, `N more` |
 | `--help`, `-h` | | Usage |
@@ -72,6 +73,8 @@ yf-tree --stamp --ignore dist --ignore "*.log"
 `--out docs/tree.md` writes that file. `--out docs` writes `docs/tree.md` or `docs/tree.html`. A path that already exists as a directory is a directory. A new path whose last segment has an extension is a file. `--out -` prints to the terminal and does not write a file. `--stamp` applies to the default folder and to `--out`. It does not change stdout.
 
 If the output file sits inside the scanned tree, that file is left out of the listing.
+
+`yf-tree --gitignore` adds `yf-tree-out/` to the `.gitignore` at the git root, the directory that contains `.git`. The pattern has no leading slash, so the folder is ignored wherever you run the command. A line that is already `yf-tree-out/` or `/yf-tree-out/` is left as it is. Without a git repository, the flag fails and does not create a `.gitignore`.
 
 ## What is skipped
 

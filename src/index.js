@@ -5,6 +5,7 @@ import { helpText, parseArgs } from "./args.js";
 import { CliError } from "./errors.js";
 import { displayPath, displayWritten, relativeInside, resolveOutput } from "./output.js";
 import { renderHtml, renderMarkdown } from "./render.js";
+import { ensureOutputGitignore } from "./repo-gitignore.js";
 import { walk } from "./walk.js";
 
 const pkg = JSON.parse(
@@ -78,18 +79,30 @@ function execute(args, deps) {
 
   if (output.stdout) {
     deps.write(body);
-    return 0;
+  } else {
+    try {
+      mkdirSync(path.dirname(output.filePath), { recursive: true });
+      writeFileSync(output.filePath, body);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new CliError(`Cannot write ${output.filePath}: ${message}`);
+    }
+    deps.err(`wrote ${displayWritten(deps.cwd, output.filePath)}`);
   }
 
-  try {
-    mkdirSync(path.dirname(output.filePath), { recursive: true });
-    writeFileSync(output.filePath, body);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    throw new CliError(`Cannot write ${output.filePath}: ${message}`);
-  }
-  deps.err(`wrote ${displayWritten(deps.cwd, output.filePath)}`);
+  if (args.gitignore) noteGitignore(deps);
   return 0;
+}
+
+/**
+ * @param {ReturnType<typeof defaultDeps>} deps
+ */
+function noteGitignore(deps) {
+  const result = ensureOutputGitignore(deps.cwd);
+  const shown = displayWritten(deps.cwd, result.file);
+  deps.err(
+    result.status === "added" ? `added yf-tree-out/ to ${shown}` : `yf-tree-out/ already in ${shown}`,
+  );
 }
 
 /**

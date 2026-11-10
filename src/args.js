@@ -13,6 +13,7 @@ import { compileUserPattern } from "./ignore.js";
  * @property {import("./ignore.js").Rule[]} ignore
  * @property {boolean} noDefaultIgnore
  * @property {boolean} noGitignore
+ * @property {boolean} gitignore
  * @property {boolean} dirsOnly
  * @property {number | null} maxChildren
  */
@@ -82,6 +83,7 @@ export function parseArgs(argv) {
   const ignore = [];
   let noDefaultIgnore = false;
   let noGitignore = false;
+  let gitignore = false;
   let dirsOnly = false;
   /** @type {number | null} */
   let maxChildren = null;
@@ -116,6 +118,10 @@ export function parseArgs(argv) {
     }
     if (a === "--dirs-only") {
       dirsOnly = true;
+      continue;
+    }
+    if (a === "--gitignore") {
+      gitignore = true;
       continue;
     }
 
@@ -159,6 +165,7 @@ export function parseArgs(argv) {
     ignore: ignore.map((pattern) => compileUserPattern(pattern)),
     noDefaultIgnore,
     noGitignore,
+    gitignore,
     dirsOnly,
     maxChildren,
   };
@@ -188,6 +195,8 @@ Options:
                          Added on top of the built-in skips. Gitignore syntax.
   --no-default-ignore    Turn the built-in skips off.
   --no-gitignore         Also list paths a .gitignore in the scanned tree would hide.
+  --gitignore            Add yf-tree-out/ to the repository root .gitignore.
+                         Creates that file when it is missing. Off by default.
   --dirs-only            Directories only.
   --max-children <n>     Max entries kept per folder. The rest become one line, N more.
   --help, -h             Show this help.
